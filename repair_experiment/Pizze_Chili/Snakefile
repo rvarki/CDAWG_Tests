@@ -1,0 +1,58 @@
+import os
+
+# Configure the working directory for the script
+workdir: config['workdir']
+
+DATASET = config["dataset"]
+SEQUENCE = config["sequence"]
+        
+#######################################################################################################
+
+rule all:
+    input:
+        expand("sequences/repair/Pizze_Chili/{dataset}/{sequence}.R", dataset=DATASET, sequence=SEQUENCE),
+        expand("sequences/repair/Pizze_Chili/{dataset}/{sequence}.C", dataset=DATASET, sequence=SEQUENCE),
+        expand("sequences/repair/Pizze_Chili/{dataset}/{sequence}.out", dataset=DATASET, sequence=SEQUENCE)
+
+rule repair:
+    input:
+        seq    = os.path.join(config["directory"], "{dataset}", "{sequence}"),
+        script = config["compress_script"]
+    benchmark: "benchmarks/repair/Pizze_Chili/{dataset}/{sequence}.repair.compress.benchmark.txt",
+    log:
+        "logs/repair/Pizze_Chili/{dataset}/{sequence}.repair.log",
+    output:
+        R = "sequences/repair/Pizze_Chili/{dataset}/{sequence}.R",
+        C = "sequences/repair/Pizze_Chili/{dataset}/{sequence}.C",
+    shell:
+        """
+        mkdir -p $(dirname {output.R})
+        mkdir -p $(dirname {log})
+
+        # Only create the symlink if it doesn't already exist
+        [ ! -e $(dirname {output.R})/$(basename {input.seq}) ] && ln -s {input.seq} $(dirname {output.R})
+
+        (
+        {input.script} $(dirname {output.R})/$(basename {input.seq})
+        ) > {log} 2>&1
+        """
+
+rule repair_decompression:
+    input:
+        R = "sequences/repair/Pizze_Chili/{dataset}/{sequence}.R",
+        C = "sequences/repair/Pizze_Chili/{dataset}/{sequence}.C",
+        script = config["decompress_script"],
+    benchmark: "benchmarks/repair/Pizze_Chili/{dataset}/{sequence}.repair.decompress.benchmark.txt",
+    params:
+        prefix = "sequences/repair/Pizze_Chili/{dataset}/{sequence}",
+    log:
+        "logs/repair/Pizze_Chili/{dataset}/{sequence}.repair.decompress.log",
+    output:
+        decompress = "sequences/repair/Pizze_Chili/{dataset}/{sequence}.out",
+    shell:
+        """
+        mkdir -p $(dirname {log})
+        (
+        {input.script} {params.prefix}
+        ) > {log} 2>&1 
+        """

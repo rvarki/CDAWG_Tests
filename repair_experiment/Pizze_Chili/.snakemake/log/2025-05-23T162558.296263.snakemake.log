@@ -1,0 +1,56 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 100
+Job stats:
+job                     count
+--------------------  -------
+all                         1
+repair                      1
+repair_decompression        1
+total                       3
+
+Select jobs to execute...
+
+[Fri May 23 16:25:59 2025]
+rule repair:
+    input: /blue/boucher/share/Pizze_Chili/real/einstein.en.txt, /blue/boucher/rvarki/Testing/repair/repair
+    output: sequences/repair/Pizze_Chili/real/einstein.en.txt.R, sequences/repair/Pizze_Chili/real/einstein.en.txt.C
+    jobid: 1
+    benchmark: benchmarks/repair/Pizze_Chili/real/einstein.en.txt.repair.compress.benchmark.txt
+    reason: Missing output files: sequences/repair/Pizze_Chili/real/einstein.en.txt.R, sequences/repair/Pizze_Chili/real/einstein.en.txt.C
+    wildcards: dataset=real, sequence=einstein.en.txt
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 1 with external jobid 'Submitted batch job 3396648'.
+[Fri May 23 16:29:00 2025]
+Finished job 1.
+1 of 3 steps (33%) done
+Select jobs to execute...
+
+[Fri May 23 16:29:00 2025]
+rule repair_decompression:
+    input: sequences/repair/Pizze_Chili/real/einstein.en.txt.R, sequences/repair/Pizze_Chili/real/einstein.en.txt.C, /blue/boucher/rvarki/Testing/repair/despair
+    output: sequences/repair/Pizze_Chili/real/einstein.en.txt.out
+    jobid: 2
+    benchmark: benchmarks/repair/Pizze_Chili/real/einstein.en.txt.repair.decompress.benchmark.txt
+    reason: Missing output files: sequences/repair/Pizze_Chili/real/einstein.en.txt.out; Input files updated by another job: sequences/repair/Pizze_Chili/real/einstein.en.txt.R, sequences/repair/Pizze_Chili/real/einstein.en.txt.C
+    wildcards: dataset=real, sequence=einstein.en.txt
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 2 with external jobid 'Submitted batch job 3397038'.
+[Fri May 23 16:32:39 2025]
+Error in rule repair_decompression:
+    jobid: 2
+    input: sequences/repair/Pizze_Chili/real/einstein.en.txt.R, sequences/repair/Pizze_Chili/real/einstein.en.txt.C, /blue/boucher/rvarki/Testing/repair/despair
+    output: sequences/repair/Pizze_Chili/real/einstein.en.txt.out
+    shell:
+        
+        /blue/boucher/rvarki/Testing/repair/despair sequences/repair/Pizze_Chili/real/einstein.en.txt 
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 3397038
+
+Error executing rule repair_decompression on cluster (jobid: 2, external: Submitted batch job 3397038, jobscript: /blue/boucher/rvarki/alan_analysis/.snakemake/tmp.pih7508e/snakejob.repair_decompression.2.sh). For error details see the cluster log and the log files of the involved rule(s).
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: ../Testing/CDAWG_Tests/repair_experiment/Pizze_Chili/.snakemake/log/2025-05-23T162558.296263.snakemake.log

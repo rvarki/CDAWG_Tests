@@ -1,0 +1,9 @@
+{
+  "workdir": "/blue/boucher/rvarki/alan_analysis",
+  "compress_script": "/blue/boucher/rvarki/Testing/repair/repair",
+  "decompress_script": "/blue/boucher/rvarki/Testing/repair/despair",
+  "directory": "/blue/boucher/share/Pizze_Chili",
+  "dataset": "real",
+  "sequence": "einstein.en.txt"
+}
+
